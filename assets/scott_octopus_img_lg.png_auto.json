@@ -1,0 +1,21 @@
+{
+  "artwork": {
+    "subject": "octopus",
+    "description": "An artistic depiction of an octopus with long, flowing tentacles.",
+    "colors": ["blue", "white", "silver"],
+    "background": {
+      "color": "dark blue",
+      "details": "star-speckled"
+    },
+    "lighting": {
+      "source": "top of its head",
+      "color": "golden",
+      "effect": "light rays emanating and spreading across the image"
+    },
+    "tentacles": {
+      "style": "long, flowing",
+      "design": "intricately designed with lines and patterns"
+    },
+    "aesthetic": "blend of nature and cosmic elements"
+  }
+}
