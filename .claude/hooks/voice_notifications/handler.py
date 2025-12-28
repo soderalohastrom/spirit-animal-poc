@@ -1,6 +1,6 @@
-#!/usr/bin/env python3
+#!/Users/soderstrom/.pyenv/versions/3.12.8/bin/python3
 # /// script
-# requires-python = ">=3.13"
+# requires-python = ">=3.12"
 # dependencies = [
 #     "pygame",
 # ]
