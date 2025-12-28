@@ -650,3 +650,47 @@
 2025-12-27 18:22:43 - hooks.voice_notifications - INFO - 🎵 Attempting to play: alfred/waiting_for_input
 2025-12-27 18:22:43 - hooks.voice_notifications - DEBUG - Found primary sound file: /Users/soderstrom/generated_repos/ai-oriented-dev-hooks/.claude/hooks/voice_notifications/sounds/alfred/waiting_for_input.mp3
 2025-12-27 18:22:45 - hooks.voice_notifications - INFO - ✅ Successfully played: alfred/waiting_for_input -> waiting_for_input.mp3 (from /Users/soderstrom/generated_repos/ai-oriented-dev-hooks/.claude/hooks/voice_notifications/sounds/alfred/waiting_for_input.mp3)
+2025-12-27 22:44:13 - hooks.voice_notifications - INFO - Voice notification hook started with voice: alfred, debug: False
+2025-12-27 22:44:13 - hooks.voice_notifications - INFO - 🔄 Processing: Stop + None
+2025-12-27 22:44:13 - hooks.voice_notifications - DEBUG - Full hook data: {'hook_event_name': 'Stop'}
+2025-12-27 22:44:13 - hooks.voice_notifications - DEBUG - Loaded sound mapping from /Users/soderstrom/generated_repos/spirit-animal-poc/.claude/hooks/voice_notifications/sound_mapping.json
+2025-12-27 22:44:13 - hooks.voice_notifications - DEBUG - Hook event mapping: 'Stop' -> 'task_complete'
+2025-12-27 22:44:13 - hooks.voice_notifications - INFO - 🎵 Attempting to play: alfred/task_complete
+2025-12-27 22:44:13 - hooks.voice_notifications - ERROR - ❌ pygame not available (alfred/task_complete): No module named 'pygame' - falling back to terminal bell
+2025-12-27 22:44:16 - hooks.voice_notifications - INFO - Voice notification hook started with voice: alfred, debug: False
+2025-12-27 22:44:16 - hooks.voice_notifications - INFO - 🔄 Processing: PostToolUse + Read -> app.tsx
+2025-12-27 22:44:16 - hooks.voice_notifications - DEBUG - Full hook data: {'hook_event_name': 'PostToolUse', 'tool_name': 'Read', 'tool_input': {'file_path': 'app.tsx'}}
+2025-12-27 22:44:16 - hooks.voice_notifications - DEBUG - Loaded sound mapping from /Users/soderstrom/generated_repos/spirit-animal-poc/.claude/hooks/voice_notifications/sound_mapping.json
+2025-12-27 22:44:16 - hooks.voice_notifications - DEBUG - Context-aware mapping: PostToolUse + Read -> 'beginning_typescript_access'
+2025-12-27 22:44:16 - hooks.voice_notifications - INFO - 🎵 Attempting to play: alfred/beginning_typescript_access
+2025-12-27 22:44:16 - hooks.voice_notifications - ERROR - ❌ pygame not available (alfred/beginning_typescript_access): No module named 'pygame' - falling back to terminal bell
+2025-12-27 22:44:19 - hooks.voice_notifications - INFO - Voice notification hook started with voice: alfred, debug: False
+2025-12-27 22:44:19 - hooks.voice_notifications - INFO - 🔄 Processing: PreToolUse + Bash -> git status
+2025-12-27 22:44:19 - hooks.voice_notifications - DEBUG - Full hook data: {'hook_event_name': 'PreToolUse', 'tool_name': 'Bash', 'tool_input': {'command': 'git status'}}
+2025-12-27 22:44:19 - hooks.voice_notifications - DEBUG - Loaded sound mapping from /Users/soderstrom/generated_repos/spirit-animal-poc/.claude/hooks/voice_notifications/sound_mapping.json
+2025-12-27 22:44:19 - hooks.voice_notifications - DEBUG - Context-aware mapping: PreToolUse + Bash -> 'beginning_status_check'
+2025-12-27 22:44:19 - hooks.voice_notifications - INFO - 🎵 Attempting to play: alfred/beginning_status_check
+2025-12-27 22:44:19 - hooks.voice_notifications - ERROR - ❌ pygame not available (alfred/beginning_status_check): No module named 'pygame' - falling back to terminal bell
+2025-12-27 22:47:02 - hooks.voice_notifications - INFO - Voice notification hook started with voice: alfred, debug: False
+2025-12-27 22:47:02 - hooks.voice_notifications - INFO - 🔄 Processing: Stop + None
+2025-12-27 22:47:02 - hooks.voice_notifications - DEBUG - Full hook data: {'hook_event_name': 'Stop'}
+2025-12-27 22:47:02 - hooks.voice_notifications - DEBUG - Loaded sound mapping from /Users/soderstrom/generated_repos/spirit-animal-poc/.claude/hooks/voice_notifications/sound_mapping.json
+2025-12-27 22:47:02 - hooks.voice_notifications - DEBUG - Hook event mapping: 'Stop' -> 'work_finished'
+2025-12-27 22:47:02 - hooks.voice_notifications - INFO - 🎵 Attempting to play: alfred/work_finished
+2025-12-27 22:47:02 - hooks.voice_notifications - ERROR - ❌ pygame not available (alfred/work_finished): No module named 'pygame' - falling back to terminal bell
+2025-12-27 22:51:26 - hooks.voice_notifications - INFO - Voice notification hook started with voice: alfred, debug: False
+2025-12-27 22:51:26 - hooks.voice_notifications - INFO - 🔄 Processing: Stop + None
+2025-12-27 22:51:26 - hooks.voice_notifications - DEBUG - Full hook data: {'hook_event_name': 'Stop'}
+2025-12-27 22:51:26 - hooks.voice_notifications - DEBUG - Loaded sound mapping from /Users/soderstrom/generated_repos/spirit-animal-poc/.claude/hooks/voice_notifications/sound_mapping.json
+2025-12-27 22:51:26 - hooks.voice_notifications - DEBUG - Hook event mapping: 'Stop' -> 'work_concluded'
+2025-12-27 22:51:26 - hooks.voice_notifications - INFO - 🎵 Attempting to play: alfred/work_concluded
+2025-12-27 22:51:26 - hooks.voice_notifications - DEBUG - Found primary sound file: /Users/soderstrom/generated_repos/spirit-animal-poc/.claude/hooks/voice_notifications/sounds/alfred/work_concluded.mp3
+2025-12-27 22:51:28 - hooks.voice_notifications - INFO - ✅ Successfully played: alfred/work_concluded -> work_concluded.mp3 (from /Users/soderstrom/generated_repos/spirit-animal-poc/.claude/hooks/voice_notifications/sounds/alfred/work_concluded.mp3)
+2025-12-27 22:55:55 - hooks.voice_notifications - INFO - Voice notification hook started with voice: alfred, debug: False
+2025-12-27 22:55:55 - hooks.voice_notifications - INFO - 🔄 Processing: Stop + None
+2025-12-27 22:55:55 - hooks.voice_notifications - DEBUG - Full hook data: {'hook_event_name': 'Stop'}
+2025-12-27 22:55:55 - hooks.voice_notifications - DEBUG - Loaded sound mapping from /Users/soderstrom/generated_repos/spirit-animal-poc/.claude/hooks/voice_notifications/sound_mapping.json
+2025-12-27 22:55:55 - hooks.voice_notifications - DEBUG - Hook event mapping: 'Stop' -> 'work_concluded'
+2025-12-27 22:55:55 - hooks.voice_notifications - INFO - 🎵 Attempting to play: alfred/work_concluded
+2025-12-27 22:55:55 - hooks.voice_notifications - DEBUG - Found primary sound file: /Users/soderstrom/generated_repos/spirit-animal-poc/.claude/hooks/voice_notifications/sounds/alfred/work_concluded.mp3
+2025-12-27 22:55:57 - hooks.voice_notifications - INFO - ✅ Successfully played: alfred/work_concluded -> work_concluded.mp3 (from /Users/soderstrom/generated_repos/spirit-animal-poc/.claude/hooks/voice_notifications/sounds/alfred/work_concluded.mp3)

@@ -2,3 +2,7 @@
 .auto-claude/
 .claude/bin/
 .claude/dep-graph.toon
+.claude/hooks/.DS_Store
+.claude/hooks/voice_notifications/debug.log
+.env
+.DS_Store
