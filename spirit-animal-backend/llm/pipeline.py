@@ -89,6 +89,7 @@ Guidelines:
         ],
         temperature=0.7,
         max_tokens=500,
+        timeout=60.0,  # 60 second timeout for personality analysis
     )
 
     return response.choices[0].message.content
@@ -126,7 +127,7 @@ Return JSON in this exact format:
     "animal_reasoning": "2-3 sentences explaining why this animal perfectly represents them",
     "medium": "art style/medium name",
     "medium_reasoning": "2-3 sentences explaining why this style captures their essence",
-    "image_prompt": "A detailed, vivid prompt for DALL-E to generate the spirit animal portrait. Include the animal, the art style, mood, colors, and composition. Make it visually striking and unique."
+    "image_prompt": "A detailed, vivid prompt for the OpenAI image model (gpt-image-1) to generate the spirit animal portrait. Include the animal, the art style, mood, colors, and composition. Make it visually striking and unique."
 }""",
             },
             {
@@ -136,6 +137,7 @@ Return JSON in this exact format:
         ],
         temperature=0.8,
         max_tokens=500,
+        timeout=60.0,  # 60 second timeout for spirit animal determination
     )
 
     return json.loads(response.choices[0].message.content)
@@ -153,11 +155,12 @@ def step3_generate_image(image_prompt: str, provider: str = "openai") -> str:
     """
     if provider == "openai":
         response = openai_client.images.generate(
-            model="dall-e-3",
+            model="gpt-image-1",
             prompt=image_prompt,
             size="1024x1024",
             quality="standard",
             n=1,
+            timeout=120.0,  # 120 second timeout for image generation (longer due to image processing)
         )
         return response.data[0].url
 

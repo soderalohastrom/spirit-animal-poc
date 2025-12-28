@@ -1,0 +1,146 @@
+{
+  "hook_events": {
+    "Stop": [
+      "task_complete",
+      "work_finished",
+      "request_fulfilled",
+      "work_concluded",
+      "assignment_finished"
+    ],
+    "SubagentStop": ["task_complete", "subtask_finished"],
+    "Notification": {
+      "permission_request": ["permission_request", "authorization_needed"],
+      "idle_timeout": ["waiting_for_input", "awaiting_response"],
+      "default": ["notification", "alert", "attention"]
+    },
+    "UserPromptSubmit": "notification",
+    "PreToolUse": {
+      "default": "task_started"
+    },
+    "PostToolUse": {
+      "exit_plan_mode": ["plan_ready", "awaiting_approval"],
+      "default": ["task_complete", "operation_finished"]
+    }
+  },
+  "tools": {
+    "Read": "file_read",
+    "NotebookRead": "file_read",
+    "Edit": "code_edit",
+    "MultiEdit": "code_edit",
+    "Write": "code_edit",
+    "NotebookEdit": "code_edit",
+    "Grep": "search",
+    "Glob": "search",
+    "LS": "search",
+    "Bash": "system_command",
+    "Task": "task_started",
+    "WebFetch": "search",
+    "WebSearch": "search",
+    "TodoWrite": ["updating_todo_list", "managing_tasks", "tracking_progress"]
+  },
+  "context_patterns": {
+    "file_operations": {
+      "Read": {
+        "by_extension": {
+          ".py": ["starting_python_read", "beginning_python_access"],
+          ".js": ["starting_javascript_read", "beginning_javascript_access"],
+          ".ts": ["starting_typescript_read", "beginning_typescript_access"],
+          ".tsx": ["starting_typescript_read", "beginning_typescript_access"],
+          ".md": ["starting_docs_read", "beginning_docs_review"],
+          ".json": ["starting_config_read", "beginning_config_check"],
+          ".yml": ["starting_yaml_read", "beginning_yaml_check"],
+          ".yaml": ["starting_yaml_read", "beginning_yaml_check"],
+          ".toml": ["starting_config_read", "beginning_config_check"],
+          ".txt": ["starting_text_read", "beginning_text_access"],
+          ".log": ["starting_log_read", "beginning_log_check"]
+        },
+        "by_filename": {
+          "package.json": ["starting_package_read", "beginning_package_check"],
+          "CLAUDE.md": [
+            "starting_instructions_read",
+            "beginning_guidance_review"
+          ],
+          "README.md": ["starting_readme_read", "beginning_readme_review"],
+          ".gitignore": [
+            "starting_gitignore_read",
+            "beginning_gitignore_check"
+          ],
+          "requirements.txt": [
+            "starting_requirements_read",
+            "beginning_deps_check"
+          ]
+        },
+        "default": ["file_read"]
+      },
+      "Edit": {
+        "by_extension": {
+          ".py": ["starting_python_edit", "beginning_python_changes"],
+          ".js": ["starting_javascript_edit", "beginning_javascript_changes"],
+          ".ts": ["starting_typescript_edit", "beginning_typescript_changes"],
+          ".md": ["starting_docs_edit", "beginning_docs_update"],
+          ".json": ["starting_config_edit", "beginning_config_update"],
+          ".yml": ["starting_yaml_edit", "beginning_yaml_update"],
+          ".yaml": ["starting_yaml_edit", "beginning_yaml_update"],
+          ".toml": ["starting_config_edit", "beginning_config_update"],
+          ".txt": ["starting_text_edit", "beginning_text_update"]
+        },
+        "by_filename": {
+          "package.json": ["starting_package_edit", "beginning_package_update"],
+          "CLAUDE.md": [
+            "starting_instructions_edit",
+            "beginning_guidance_update"
+          ],
+          "README.md": ["starting_readme_edit", "beginning_readme_update"]
+        },
+        "default": ["code_edit"]
+      },
+      "Write": {
+        "by_extension": {
+          ".py": ["starting_python_write", "beginning_python_creation"],
+          ".js": ["starting_javascript_write", "beginning_javascript_creation"],
+          ".ts": ["starting_typescript_write", "beginning_typescript_creation"],
+          ".tsx": [
+            "starting_typescript_write",
+            "beginning_typescript_creation"
+          ],
+          ".md": ["starting_docs_write", "beginning_docs_creation"],
+          ".json": ["starting_config_write", "beginning_config_creation"],
+          ".txt": ["starting_text_write", "beginning_text_creation"]
+        },
+        "default": ["code_edit"]
+      }
+    },
+    "bash_commands": {
+      "git": {
+        "git status": ["starting_git_status", "beginning_status_check"],
+        "git add": ["starting_git_staging", "beginning_file_staging"],
+        "git commit": ["starting_git_commit", "beginning_changes_save"],
+        "git log": ["starting_git_history", "beginning_history_check"],
+        "git diff": ["starting_git_diff", "beginning_changes_check"],
+        "git push": ["starting_git_push", "beginning_upload"],
+        "git pull": ["starting_git_pull", "beginning_download"]
+      },
+      "npm": {
+        "npm install": ["starting_npm_install", "beginning_package_install"],
+        "npm run": ["starting_script", "beginning_npm_script"],
+        "npm test": ["starting_tests", "beginning_test_run"],
+        "npm build": ["starting_build", "beginning_compilation"]
+      },
+      "uv": {
+        "uv run": ["starting_python_script", "beginning_python_exec"],
+        "uv install": ["starting_python_deps", "beginning_python_install"]
+      },
+      "python": {
+        "python": ["starting_python", "beginning_python_script"]
+      },
+      "echo": ["starting_echo", "beginning_output"],
+      "ls": ["starting_list", "beginning_directory_view"],
+      "mkdir": ["starting_mkdir", "beginning_directory_creation"],
+      "rm": ["starting_removal", "beginning_file_deletion"],
+      "mv": ["starting_move", "beginning_file_relocation"],
+      "cp": ["starting_copy", "beginning_file_duplication"],
+      "default": ["system_command"]
+    }
+  },
+  "default": "error"
+}
