@@ -259,6 +259,8 @@ The key handles LLM costs (GPT-4.1 by default). You can configure different mode
 
 ## Resources
 
+- Check your MCP Tools for 'Tambo ask' with direct access to Tambo API questions, as well as a condensed Github docs MCP reference.
+
 - [Tambo Docs](https://docs.tambo.co)
 - [Tambo API Reference](https://docs.tambo.co/api-reference)
 - [React Hooks Reference](https://docs.tambo.co/api-reference/react-hooks)
