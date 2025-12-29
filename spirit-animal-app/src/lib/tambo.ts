@@ -15,7 +15,7 @@ import { z } from "zod";
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 /**
- * Spirit Animal Result Schema
+ * Spirit Animal Result Schema - matches what TamboSpiritAnimalCard expects
  */
 const spiritResultSchema = z.object({
   animal: z.string().describe("The spirit animal name"),
@@ -33,43 +33,77 @@ export const tools: TamboTool[] = [
     description: `Generate a spirit animal based on user profile information. 
     Call this when you have gathered enough information about the user including:
     - Their name
-    - Personality traits or self-description
-    - Optionally their social media handle for deeper analysis
+    - Their interests and hobbies
+    - Their values and what matters to them
     The tool will analyze their profile and return a matching spirit animal.`,
     tool: async (params: {
       name: string;
-      personality?: string;
-      hobbies?: string;
-      socialHandle?: string;
-      imageProvider?: "none" | "dalle" | "replicate";
+      interests?: string;
+      values?: string;
+      imageProvider?: "none" | "openai" | "replicate";
     }) => {
-      const response = await fetch(`${API_BASE}/api/spirit-animal`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: params.name,
-          personality: params.personality || "",
-          hobbies: params.hobbies || "",
-          social_handle: params.socialHandle || "",
-          image_provider: params.imageProvider || "none",
-        }),
-      });
+      console.log("[Tambo Tool] generateSpiritAnimal called with:", params);
       
-      if (!response.ok) {
-        throw new Error("Failed to generate spirit animal");
+      const requestBody = {
+        name: params.name,
+        interests: params.interests || "",
+        values: params.values || "",
+        socialHandles: [],
+        image_provider: params.imageProvider || "none",
+      };
+      
+      console.log("[Tambo Tool] Sending to backend:", requestBody);
+      console.log("[Tambo Tool] Backend URL:", `${API_BASE}/api/spirit-animal`);
+      
+      try {
+        const response = await fetch(`${API_BASE}/api/spirit-animal`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(requestBody),
+        });
+        
+        console.log("[Tambo Tool] Response status:", response.status);
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error("[Tambo Tool] Backend error:", errorText);
+          throw new Error(`Backend returned ${response.status}: ${errorText}`);
+        }
+        
+        const backendResult = await response.json();
+        console.log("[Tambo Tool] Backend response:", backendResult);
+        
+        // Transform backend response to match our schema
+        const transformedResult = {
+          animal: backendResult.spirit_animal,
+          traits: [
+            // Extract key traits from personality summary
+            ...backendResult.personality_summary
+              .split(/[.,]/)
+              .slice(0, 3)
+              .map((t: string) => t.trim())
+              .filter((t: string) => t.length > 0 && t.length < 50),
+          ],
+          explanation: backendResult.animal_reasoning,
+          image_url: backendResult.image_url || undefined,
+        };
+        
+        console.log("[Tambo Tool] Transformed result:", transformedResult);
+        return transformedResult;
+        
+      } catch (error) {
+        console.error("[Tambo Tool] Error:", error);
+        throw error;
       }
-      
-      return await response.json();
     },
     toolSchema: z
       .function()
       .args(
         z.object({
           name: z.string().describe("User's name"),
-          personality: z.string().optional().describe("User's personality traits or self-description"),
-          hobbies: z.string().optional().describe("User's hobbies and interests"),
-          socialHandle: z.string().optional().describe("Social media handle (Twitter/X) for deeper analysis"),
-          imageProvider: z.enum(["none", "dalle", "replicate"]).optional().describe("Image generation provider"),
+          interests: z.string().optional().describe("User's interests and hobbies"),
+          values: z.string().optional().describe("User's values and what matters to them"),
+          imageProvider: z.enum(["none", "openai", "replicate"]).optional().describe("Image generation provider - use 'none' for faster results"),
         })
       )
       .returns(spiritResultSchema),
@@ -108,12 +142,14 @@ export const SPIRIT_ANIMAL_SYSTEM_PROMPT = `You are a friendly and intuitive Spi
 ## Conversation Flow
 1. **Greeting**: Welcome the user warmly and ask their name
 2. **Discovery**: Ask 2-3 engaging questions to understand them:
-   - What energizes them vs drains them
-   - How they approach challenges
-   - What qualities they admire in others
-   - Their favorite way to spend free time
-3. **Optional Deep Dive**: If they mention social media, offer to analyze their profile for deeper insights
-4. **Reveal**: When ready, call generateSpiritAnimal with gathered info, then render the SpiritAnimalCard
+   - What are their interests and hobbies?
+   - What values matter most to them?
+   - What energizes them vs drains them?
+3. **Reveal**: When ready, call generateSpiritAnimal with:
+   - name: their name
+   - interests: summary of their hobbies and interests
+   - values: summary of what matters to them
+   - imageProvider: "none" (for speed)
 
 ## Guidelines
 - Keep questions conversational, not like a form
