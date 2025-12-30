@@ -80,7 +80,7 @@ class SpiritRequest(BaseModel):
     interests: str = ""
     values: str = ""
     socialHandles: list[SocialHandle] = []
-    image_provider: str = "openai"
+    image_provider: str = "gemini"
 
 
 class SpiritResponse(BaseModel):
@@ -111,7 +111,7 @@ class SpiritRequestV2(BaseModel):
     element_affinity: str | None = None  # "fire", "water", "earth", "air"
     
     # Image generation options
-    image_provider: str = "openai"  # "openai", "gemini", "ideogram", "none"
+    image_provider: str = "gemini"  # "gemini" (default), "openai", "ideogram", "none"
     skip_image: bool = False  # For testing interpretation without image gen
 
 

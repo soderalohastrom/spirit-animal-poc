@@ -1,0 +1,11 @@
+{
+  "prompt": "Create a serene watercolor portrait of an elephant, emphasizing its gentle and wise nature. Use soft washes of grays and gentle blues to convey a calming presence, with fine pen details to accentuate its expressive eyes and textured skin. The elephant should be depicted in a tranquil setting, perhaps under a large, leafy tree, symbolizing community and tranquility. Capture the essence of quiet strength and deep connection, with subtle highlights that suggest the animal's social and introspective qualities. The overall composition should exude warmth and understated wisdom, with an emphasis on the elephant's thoughtful gaze and serene environment, conceptual art",
+  "result": {
+    "provider": "gemini",
+    "model": "gemini-2.0-flash-exp-image-generation",
+    "mime_type": "image/png",
+    "image_url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABAAAAAKoCAIAAABm4BptAAAAiX...",
+    "saved_to": "test_image_gemini_20251228_204414.png"
+  },
+  "timestamp": "20251228_204414"
+}

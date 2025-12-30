@@ -1,0 +1,11 @@
+{
+  "prompt": "Create a serene watercolor portrait of an elephant, emphasizing its gentle and wise nature. Use soft washes of grays and gentle blues to convey a calming presence, with fine pen details to accentuate its expressive eyes and textured skin. The elephant should be depicted in a tranquil setting, perhaps under a large, leafy tree, symbolizing community and tranquility. Capture the essence of quiet strength and deep connection, with subtle highlights that suggest the animal's social and introspective qualities. The overall composition should exude warmth and understated wisdom, with an emphasis on the elephant's thoughtful gaze and serene environment, conceptual art",
+  "result": {
+    "provider": "openai",
+    "model": "dall-e-3",
+    "image_url": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-mL8F2a1UeUvUieKfJ8GTqvSL/user-zbK3AHEE9NyD1ZECplPdSqQC/img-y4pHYMtBY5R5MNZydR21krbR.png?st=2025-12-29T01%3A12%3A50Z&se=2025-12-29T03%3A12%3A50Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=32836cae-d25f-4fe9-827b-1c8c59c442cc&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-12-29T02%3A07%3A59Z&ske=2025-12-30T02%3A07%3A59Z&sks=b&skv=2024-08-04&sig=tWZx97aZdB%2B1sCBSb0IA6qCUzwJGDr5c%2BoZBqTYcltQ%3D",
+    "revised_prompt": "Create a peaceful watercolor painting of an elephant, emphasizing its gentle and wise characteristics. Use soft washes of grays and gentle blues for a calming effect, along with fine pen details for accentuating its expressive eyes and textured skin. The elephant is under a big, leafy tree, a symbol of community and tranquility. The artwork should depict a sense of quiet strength and deep connection, with subtle highlights reflecting the elephant's sociability and introspection. The overall composition should project warmth and subtle wisdom, with focus on the elephant's thoughtful gaze and peaceful surroundings which is a form of conceptual art. The illustration should strictly avoid any text, words, letters, or human faces.",
+    "saved_to": "test_image_openai_20251228_181235.png"
+  },
+  "timestamp": "20251228_181235"
+}

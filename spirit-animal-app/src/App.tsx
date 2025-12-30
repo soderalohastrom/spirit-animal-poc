@@ -7,13 +7,32 @@
  */
 
 import { useState } from "react";
-import { TamboProvider } from "@tambo-ai/react";
+import { TamboProvider, TamboThreadMessage } from "@tambo-ai/react";
 import { OnboardingForm, UserProfile } from "./components/OnboardingForm";
 import { SpiritAnimalCard, SpiritResult } from "./components/SpiritAnimalCard";
 import { LoadingState } from "./components/LoadingState";
 import { SpiritAnimalChat } from "./components/chat";
 import { components, tools, SPIRIT_ANIMAL_SYSTEM_PROMPT } from "./lib/tambo";
 import { MessageSquare, ClipboardList } from "lucide-react";
+
+/**
+ * Initial message that starts the conversation.
+ * The AI greets the user with Turn 1 of the 7-turn flow.
+ */
+const initialMessages: TamboThreadMessage[] = [
+  {
+    id: "welcome-message",
+    role: "assistant",
+    content: [
+      {
+        type: "text",
+        text: "Welcome, seeker! I'm here to help you discover your spirit animal through a brief journey of questions.\n\nWhat's your name?",
+      },
+    ],
+    createdAt: new Date().toISOString(),
+    componentState: {},
+  },
+];
 
 /**
  * Context helper that provides the Spirit Animal Guide instructions.
@@ -126,6 +145,7 @@ function App() {
             contextHelpers={{
               spiritGuide: spiritAnimalContextHelper,
             }}
+            initialMessages={initialMessages}
           >
             <SpiritAnimalChat />
           </TamboProvider>

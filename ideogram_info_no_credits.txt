@@ -1,0 +1,29 @@
+## older curl post example
+
+POST /generate HTTP/1.1
+Accept: application/json
+Api-Key: e_qiDilJ4M-J6vMI9Og2izMaa44kGmRP4GTOIPRoRYT3Tn4Ork1RYai71ycXMuJWU2OBDu-RqC-A9H54sGYI-Q
+Content-Length: 435
+Content-Type: application/json
+Host: api.ideogram.ai
+User-Agent: HTTPie
+
+{
+  "image_request": {
+    "model": "V_2",
+    "magic_prompt_option": "AUTO",
+    "aspect_ratio": "ASPECT_1_1",
+    "prompt": "Symbolic artwork representing hope and future potential, with a toast glass, ascending pathways, and bright horizons, symbolizing the quote 'May the best of your past be the worst of your future",
+    "style_type": "GENERAL",
+    "negative_prompt": "words, human faces, negativity of tone, watercolors"
+  }
+}
+
+## Newer V3 API to User
+https://developer.ideogram.ai/api-reference/api-reference/generate-v3
+
+curl -X POST https://api.ideogram.ai/v1/ideogram-v3/generate \
+  -H "Api-Key: <apiKey>" \
+  -H "Content-Type: multipart/form-data" \
+  -F prompt="A photo of a cat sleeping on a couch." \
+  -F rendering_speed="TURBO"
