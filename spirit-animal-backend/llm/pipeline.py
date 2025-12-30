@@ -313,13 +313,16 @@ def step3_generate_image(image_prompt: str, provider: str = "openai") -> str:
     Returns the URL of the generated image.
     """
     if provider == "openai":
+        # Add exclusions to prompt (DALL-E doesn't have negative_prompt param)
+        enhanced_prompt = f"{image_prompt}. Important: Do not include any text, words, letters, or human faces in the image."
+        
         response = openai_client.images.generate(
-            model="gpt-image-1",
-            prompt=image_prompt,
+            model="dall-e-3",
+            prompt=enhanced_prompt,
             size="1024x1024",
-            quality="high",  # gpt-image-1 accepts: low, medium, high, auto
+            quality="standard",
             n=1,
-            timeout=120.0,  # 120 second timeout for image generation (longer due to image processing)
+            timeout=120.0,
         )
         return response.data[0].url
 
