@@ -16,7 +16,7 @@ load_dotenv()
 
 # Import our modules
 from fetchers import fetch_all
-from llm import generate_spirit_animal
+from llm import generate_spirit_animal, generate_spirit_animal_v2
 
 
 @asynccontextmanager
@@ -93,6 +93,40 @@ class SpiritResponse(BaseModel):
     image_provider: str
 
 
+# V2 Request/Response models (Tambo conversational onboarding)
+class SpiritRequestV2(BaseModel):
+    """
+    V2 Request schema for Tambo conversational onboarding flow.
+    
+    The frontend assembles a rich personality summary from the 7-turn
+    conversation and sends it with structured metadata.
+    """
+    # The rich personality summary assembled by Tambo frontend
+    personality_summary: str
+    
+    # Structured metadata from conversation choices
+    pronouns: str = "unspecified"  # "he/him", "she/her", "they/them", "unspecified"
+    energy_mode: str | None = None  # "leader", "adapter", "observer"
+    social_pattern: str | None = None  # "solitude", "close_circle", "crowd"
+    element_affinity: str | None = None  # "fire", "water", "earth", "air"
+    
+    # Image generation options
+    image_provider: str = "openai"  # "openai", "gemini", "ideogram", "none"
+    skip_image: bool = False  # For testing interpretation without image gen
+
+
+class SpiritResponseV2(BaseModel):
+    """V2 Response with additional image_prompt field."""
+    personality_summary: str
+    spirit_animal: str
+    animal_reasoning: str
+    art_medium: str
+    medium_reasoning: str
+    image_prompt: str
+    image_url: str | None
+    image_provider: str
+
+
 @app.get("/")
 async def root():
     """Health check endpoint."""
@@ -144,7 +178,44 @@ async def health_check():
         "status": "healthy",
         "openai_configured": bool(os.getenv("OPENAI_API_KEY")),
         "twitter_configured": bool(os.getenv("TWITTER_BEARER_TOKEN")),
+        "gemini_configured": bool(os.getenv("GEMINI_API_KEY")),
+        "ideogram_configured": bool(os.getenv("IDEOGRAM_API_KEY")),
     }
+
+
+@app.post("/api/spirit-animal/v2", response_model=SpiritResponseV2)
+async def get_spirit_animal_v2(req: SpiritRequestV2):
+    """
+    V2 Endpoint: Generate spirit animal from Tambo conversational onboarding.
+    
+    This endpoint is designed for the Tambo-powered frontend flow:
+    1. Frontend gathers personality via 7-turn conversation
+    2. Frontend assembles rich personality summary
+    3. Backend interprets → spirit animal + artistic medium
+    4. Backend generates image (optional)
+    
+    The v2 flow skips the old personality summarization step since the
+    Tambo conversation already captured rich personality signals.
+    """
+    try:
+        result = await generate_spirit_animal_v2(
+            personality_summary=req.personality_summary,
+            pronouns=req.pronouns,
+            energy_mode=req.energy_mode,
+            social_pattern=req.social_pattern,
+            element_affinity=req.element_affinity,
+            image_provider=req.image_provider,
+            skip_image=req.skip_image,
+        )
+        
+        return SpiritResponseV2(**result)
+    
+    except Exception as e:
+        print(f"Error in v2 spirit animal generation: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to generate spirit animal: {str(e)}"
+        )
 
 
 if __name__ == "__main__":
