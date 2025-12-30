@@ -15,6 +15,15 @@ import { SpiritAnimalChat } from "./components/chat";
 import { components, tools, SPIRIT_ANIMAL_SYSTEM_PROMPT } from "./lib/tambo";
 import { MessageSquare, ClipboardList } from "lucide-react";
 
+/**
+ * Context helper that provides the Spirit Animal Guide instructions.
+ * This gives the AI its personality and conversation flow.
+ */
+const spiritAnimalContextHelper = () => ({
+  role: "Spirit Animal Guide",
+  instructions: SPIRIT_ANIMAL_SYSTEM_PROMPT,
+});
+
 type AppState = "form" | "loading" | "result";
 type AppMode = "form" | "chat";
 
@@ -114,7 +123,9 @@ function App() {
             apiKey={TAMBO_API_KEY}
             components={components}
             tools={tools}
-            systemPrompt={SPIRIT_ANIMAL_SYSTEM_PROMPT}
+            contextHelpers={{
+              spiritGuide: spiritAnimalContextHelper,
+            }}
           >
             <SpiritAnimalChat />
           </TamboProvider>
