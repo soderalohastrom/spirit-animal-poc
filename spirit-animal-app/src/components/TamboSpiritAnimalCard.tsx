@@ -33,6 +33,17 @@ export function TamboSpiritAnimalCard({
   const [imageLoading, setImageLoading] = useState(true);
   const [showDetails, setShowDetails] = useState(false);
 
+  // Defensive check - if result is undefined, show error state
+  if (!result) {
+    console.error("[TamboSpiritAnimalCard] result prop is undefined", { result, userName });
+    return (
+      <div className="bg-white rounded-xl overflow-hidden shadow-lg border border-red-200 max-w-md p-6">
+        <p className="text-red-600 font-medium">Unable to display spirit animal result.</p>
+        <p className="text-gray-500 text-sm mt-2">The result data was not received properly. Please try again.</p>
+      </div>
+    );
+  }
+
   const handleShare = async () => {
     const shareText = `My spirit animal is the ${result.animal}!\n\n${result.animalReasoning}\n\nArtistic style: ${result.artMedium}\n\nDiscover yours!`;
 
