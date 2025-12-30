@@ -317,7 +317,7 @@ def step3_generate_image(image_prompt: str, provider: str = "openai") -> str:
             model="gpt-image-1",
             prompt=image_prompt,
             size="1024x1024",
-            quality="standard",
+            quality="high",  # gpt-image-1 accepts: low, medium, high, auto
             n=1,
             timeout=120.0,  # 120 second timeout for image generation (longer due to image processing)
         )
