@@ -231,10 +231,16 @@ export const components: TamboComponent[] = [
 - The artistic medium chosen and why it captures their essence
 - The AI-generated image (if available)
 
-Use this component after calling generateSpiritAnimal to reveal the user's spirit animal.`,
+Use this component after calling generateSpiritAnimal to reveal the user's spirit animal.
+Pass all props flat (not nested under 'result').`,
     component: TamboSpiritAnimalCard,
     propsSchema: z.object({
-      result: spiritResultSchema,
+      animal: z.string().describe("The spirit animal name (e.g., 'Arctic Fox')"),
+      animalReasoning: z.string().describe("Why this animal matches the user"),
+      artMedium: z.string().describe("The artistic medium/style chosen"),
+      mediumReasoning: z.string().describe("Why this medium captures their essence"),
+      imageUrl: z.string().nullable().describe("URL to the generated spirit animal image"),
+      imagePrompt: z.string().describe("The prompt used for image generation"),
       userName: z.string().describe("The user's name to personalize the card"),
     }),
   },

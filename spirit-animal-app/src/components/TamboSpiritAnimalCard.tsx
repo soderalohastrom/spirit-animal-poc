@@ -11,31 +11,29 @@
 import { Share2, Download, Sparkles, Palette, Loader2 } from "lucide-react";
 import { useState } from "react";
 
-export interface TamboSpiritResultV2 {
+/**
+ * Flat props interface for Tambo compatibility.
+ * Tambo LLMs work better with flat props than nested objects.
+ */
+export interface TamboSpiritAnimalCardProps {
   animal: string;
   animalReasoning: string;
   artMedium: string;
   mediumReasoning: string;
   imageUrl: string | null;
   imagePrompt: string;
-}
-
-interface TamboSpiritAnimalCardProps {
-  result: TamboSpiritResultV2;
   userName: string;
 }
 
-export function TamboSpiritAnimalCard({
-  result,
-  userName,
-}: TamboSpiritAnimalCardProps) {
+export function TamboSpiritAnimalCard(props: TamboSpiritAnimalCardProps) {
+  const { animal, animalReasoning, artMedium, mediumReasoning, imageUrl, imagePrompt, userName } = props;
   const [imageError, setImageError] = useState(false);
   const [imageLoading, setImageLoading] = useState(true);
   const [showDetails, setShowDetails] = useState(false);
 
-  // Defensive check - if result is undefined, show error state
-  if (!result) {
-    console.error("[TamboSpiritAnimalCard] result prop is undefined", { result, userName });
+  // Defensive check - if animal is undefined, show error state
+  if (!animal) {
+    console.error("[TamboSpiritAnimalCard] props are incomplete", props);
     return (
       <div className="bg-white rounded-xl overflow-hidden shadow-lg border border-red-200 max-w-md p-6">
         <p className="text-red-600 font-medium">Unable to display spirit animal result.</p>
@@ -45,12 +43,12 @@ export function TamboSpiritAnimalCard({
   }
 
   const handleShare = async () => {
-    const shareText = `My spirit animal is the ${result.animal}!\n\n${result.animalReasoning}\n\nArtistic style: ${result.artMedium}\n\nDiscover yours!`;
+    const shareText = `My spirit animal is the ${animal}!\n\n${animalReasoning}\n\nArtistic style: ${artMedium}\n\nDiscover yours!`;
 
     if (navigator.share) {
       try {
         await navigator.share({
-          title: `My Spirit Animal: ${result.animal}`,
+          title: `My Spirit Animal: ${animal}`,
           text: shareText,
           url: window.location.href,
         });
@@ -63,12 +61,12 @@ export function TamboSpiritAnimalCard({
     }
   };
 
-  const hasImage = result.imageUrl && !imageError;
+  const hasImage = imageUrl && !imageError;
 
   return (
     <div className="bg-white rounded-xl overflow-hidden shadow-lg border border-purple-100 max-w-md">
       {/* Image Section */}
-      {result.imageUrl && !imageError ? (
+      {imageUrl && !imageError ? (
         <div className="relative aspect-square bg-gray-100">
           {imageLoading && (
             <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-100 to-pink-100">
@@ -81,8 +79,8 @@ export function TamboSpiritAnimalCard({
             </div>
           )}
           <img
-            src={result.imageUrl}
-            alt={result.animal}
+            src={imageUrl}
+            alt={animal}
             className={`w-full h-full object-cover transition-opacity duration-500 ${
               imageLoading ? "opacity-0" : "opacity-100"
             }`}
@@ -95,7 +93,7 @@ export function TamboSpiritAnimalCard({
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
           <div className="absolute bottom-4 left-4 right-4 text-white">
             <p className="text-sm opacity-80">{userName}'s Spirit Animal</p>
-            <h3 className="text-2xl font-bold">{result.animal}</h3>
+            <h3 className="text-2xl font-bold">{animal}</h3>
           </div>
         </div>
       ) : (
@@ -103,7 +101,7 @@ export function TamboSpiritAnimalCard({
           <div className="text-center text-white p-6">
             <Sparkles className="w-12 h-12 mx-auto mb-3" />
             <p className="text-sm opacity-80 mb-1">{userName}'s Spirit Animal</p>
-            <h3 className="text-3xl font-bold">{result.animal}</h3>
+            <h3 className="text-3xl font-bold">{animal}</h3>
           </div>
         </div>
       )}
@@ -115,7 +113,7 @@ export function TamboSpiritAnimalCard({
           <h4 className="text-sm font-semibold text-purple-700 uppercase tracking-wide mb-2">
             Why This Animal
           </h4>
-          <p className="text-gray-700 leading-relaxed">{result.animalReasoning}</p>
+          <p className="text-gray-700 leading-relaxed">{animalReasoning}</p>
         </div>
 
         {/* Artistic Medium */}
@@ -126,8 +124,8 @@ export function TamboSpiritAnimalCard({
               Artistic Style
             </h4>
           </div>
-          <p className="font-medium text-gray-800 mb-1">{result.artMedium}</p>
-          <p className="text-sm text-gray-600">{result.mediumReasoning}</p>
+          <p className="font-medium text-gray-800 mb-1">{artMedium}</p>
+          <p className="text-sm text-gray-600">{mediumReasoning}</p>
         </div>
 
         {/* Expandable Details */}
@@ -143,7 +141,7 @@ export function TamboSpiritAnimalCard({
             <p className="mb-1 font-sans text-gray-500 text-[10px] uppercase tracking-wider">
               Image Generation Prompt
             </p>
-            {result.imagePrompt}
+            {imagePrompt}
           </div>
         )}
 
@@ -158,8 +156,8 @@ export function TamboSpiritAnimalCard({
           </button>
           {hasImage && (
             <a
-              href={result.imageUrl!}
-              download={`spirit-animal-${result.animal.toLowerCase().replace(/\s+/g, "-")}.png`}
+              href={imageUrl!}
+              download={`spirit-animal-${animal.toLowerCase().replace(/\s+/g, "-")}.png`}
               target="_blank"
               rel="noopener noreferrer"
               className="py-2.5 px-4 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
