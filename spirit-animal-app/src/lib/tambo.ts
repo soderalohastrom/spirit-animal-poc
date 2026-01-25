@@ -183,6 +183,48 @@ The tool will assemble a rich personality summary and send it to the V2 backend 
       }
     },
 
+    // Transform the tool result into content that guides the AI to render the component
+    transformToContent: (result: {
+      animal: string;
+      animalReasoning: string;
+      artMedium: string;
+      mediumReasoning: string;
+      imageUrl: string | null;
+      imagePrompt: string;
+    }) => {
+      console.log("[Tambo Tool V2] transformToContent called with:", result);
+      console.log("[Tambo Tool V2] imageUrl value:", result.imageUrl);
+      
+      // Include ALL data in the text so Tambo LLM can pass it to the component
+      const imageInfo = result.imageUrl 
+        ? `**Image URL:** ${result.imageUrl}\n` 
+        : "**Image:** Not generated\n";
+      
+      return [
+        {
+          type: "text" as const,
+          text: `Spirit animal generated successfully!
+
+**Animal:** ${result.animal}
+**Why:** ${result.animalReasoning}
+
+**Art Style:** ${result.artMedium}
+**Why this style:** ${result.mediumReasoning}
+
+${imageInfo}
+**Image Prompt:** ${result.imagePrompt}
+
+Now render the SpiritAnimalCard component with these exact values:
+- animal: "${result.animal}"
+- animalReasoning: "${result.animalReasoning}"
+- artMedium: "${result.artMedium}"
+- mediumReasoning: "${result.mediumReasoning}"
+- imageUrl: ${result.imageUrl ? `"${result.imageUrl}"` : "null"}
+- imagePrompt: "${result.imagePrompt}"`,
+        },
+      ];
+    },
+
     toolSchema: z
       .function()
       .args(
@@ -325,12 +367,21 @@ E) Other — something else speaks to you?"
 
 ## The Reveal
 
-Once you have ALL the information (name, energy mode, social pattern, self-description, joy source, aspirations, element), call generateSpiritAnimal with the complete data. Then render the SpiritAnimalCard to reveal their result.
+Once you have ALL the information (name, energy mode, social pattern, self-description, joy source, aspirations, element), call generateSpiritAnimal with the complete data.
 
 Make the reveal moment special:
 "The spirits have spoken, [Name]... your spirit animal is revealing itself..."
 
-Then show the card and invite them to explore:
+**IMPORTANT: After the tool returns, you MUST render the SpiritAnimalCard component** with these props:
+- animal: the spirit animal name from the tool result
+- animalReasoning: why this animal matches them
+- artMedium: the artistic style chosen
+- mediumReasoning: why this style was chosen
+- imageUrl: the generated image URL (may be a base64 data URL)
+- imagePrompt: the prompt used for image generation
+- userName: the user's name you collected in Question 1
+
+After showing the card, invite them to reflect:
 "What do you think? Does [animal] resonate with you?"
 
 ## Mapping Responses
