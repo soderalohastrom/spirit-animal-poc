@@ -31,6 +31,14 @@ export function TamboSpiritAnimalCard(props: TamboSpiritAnimalCardProps) {
   const [imageLoading, setImageLoading] = useState(true);
   const [showDetails, setShowDetails] = useState(false);
 
+  // Debug logging - always log props on render
+  console.log("[TamboSpiritAnimalCard] Rendered with props:", {
+    animal,
+    imageUrl: imageUrl ? `${imageUrl.substring(0, 80)}...` : null,
+    imageUrlType: imageUrl ? (imageUrl.startsWith("data:") ? "base64" : "url") : "null",
+    userName,
+  });
+
   // Defensive check - if animal is undefined, show error state
   if (!animal) {
     console.error("[TamboSpiritAnimalCard] props are incomplete", props);
@@ -137,11 +145,28 @@ export function TamboSpiritAnimalCard(props: TamboSpiritAnimalCardProps) {
         </button>
 
         {showDetails && (
-          <div className="bg-gray-50 rounded-lg p-3 text-xs text-gray-600 font-mono">
-            <p className="mb-1 font-sans text-gray-500 text-[10px] uppercase tracking-wider">
-              Image Generation Prompt
-            </p>
-            {imagePrompt}
+          <div className="bg-gray-50 rounded-lg p-3 text-xs text-gray-600 font-mono space-y-2">
+            <div>
+              <p className="mb-1 font-sans text-gray-500 text-[10px] uppercase tracking-wider">
+                Image Generation Prompt
+              </p>
+              {imagePrompt}
+            </div>
+            {imageUrl && (
+              <div>
+                <p className="mb-1 font-sans text-gray-500 text-[10px] uppercase tracking-wider">
+                  Image URL
+                </p>
+                <a 
+                  href={imageUrl} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-purple-600 hover:underline break-all"
+                >
+                  {imageUrl.startsWith("data:") ? "[Base64 Data URL]" : imageUrl}
+                </a>
+              </div>
+            )}
           </div>
         )}
 

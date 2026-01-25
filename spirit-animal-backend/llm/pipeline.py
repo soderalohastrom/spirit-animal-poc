@@ -19,6 +19,44 @@ from openai import OpenAI
 openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 
+def upload_to_imgbb(
+    image_base64: str, api_key: str, filename: str = "spirit_animal"
+) -> str:
+    """
+    Upload base64 image to imgBB and return public URL.
+
+    This solves the problem of large base64 images (~500KB+) being too heavy
+    to pass through API responses. imgBB returns a small URL instead.
+
+    Args:
+        image_base64: Raw base64 string (without data:image/... prefix)
+        api_key: imgBB API key
+        filename: Optional filename for the image
+
+    Returns:
+        Public URL of the uploaded image
+    """
+    response = httpx.post(
+        "https://api.imgbb.com/1/upload",
+        data={
+            "key": api_key,
+            "image": image_base64,
+            "name": filename,
+            "expiration": 86400 * 7,  # 7 days
+        },
+        timeout=60.0,
+    )
+    response.raise_for_status()
+    result = response.json()
+
+    if not result.get("success"):
+        raise ValueError(
+            f"imgBB upload failed: {result.get('error', {}).get('message', 'Unknown error')}"
+        )
+
+    return result["data"]["url"]
+
+
 # ============================================================================
 # RICH INTERPRETATION SYSTEM PROMPT (for Tambo v2 flow)
 # ============================================================================
@@ -142,22 +180,38 @@ ELEMENT_ARTISTIC_HINTS = {
     "fire": {
         "palette": "warm oranges, reds, golds, dramatic lighting",
         "mood": "passionate, transformative, intense, dynamic",
-        "medium_affinity": ["oil paint with heavy impasto", "charcoal with dramatic contrast", "mixed media with metallic accents"],
+        "medium_affinity": [
+            "oil paint with heavy impasto",
+            "charcoal with dramatic contrast",
+            "mixed media with metallic accents",
+        ],
     },
     "water": {
         "palette": "blues, teals, silvers, flowing gradients",
         "mood": "deep, flowing, emotional, serene yet powerful",
-        "medium_affinity": ["soft watercolor washes", "Japanese ink wash (sumi-e)", "fluid acrylics"],
+        "medium_affinity": [
+            "soft watercolor washes",
+            "Japanese ink wash (sumi-e)",
+            "fluid acrylics",
+        ],
     },
     "earth": {
         "palette": "browns, greens, ochre, natural earth tones",
         "mood": "grounded, stable, nurturing, ancient",
-        "medium_affinity": ["earth-toned oil painting", "woodcut or linocut print", "naturalistic illustration"],
+        "medium_affinity": [
+            "earth-toned oil painting",
+            "woodcut or linocut print",
+            "naturalistic illustration",
+        ],
     },
     "air": {
         "palette": "light blues, whites, lavender, ethereal highlights",
         "mood": "free, light, intellectual, expansive",
-        "medium_affinity": ["delicate pen and ink", "pastel with soft blending", "minimalist line art"],
+        "medium_affinity": [
+            "delicate pen and ink",
+            "pastel with soft blending",
+            "minimalist line art",
+        ],
     },
 }
 
@@ -177,6 +231,7 @@ SOCIAL_PATTERN_HINTS = {
 # ============================================================================
 # LEGACY V1 FUNCTIONS (for backwards compatibility)
 # ============================================================================
+
 
 def aggregate_raw_text(form_data: dict, social_data: list[SocialData]) -> str:
     """
@@ -315,7 +370,7 @@ def step3_generate_image(image_prompt: str, provider: str = "openai") -> str:
     if provider == "openai":
         # Add exclusions to prompt (DALL-E doesn't have negative_prompt param)
         enhanced_prompt = f"{image_prompt}. Important: Do not include any text, words, letters, or human faces in the image."
-        
+
         response = openai_client.images.generate(
             model="dall-e-3",
             prompt=enhanced_prompt,
@@ -350,23 +405,23 @@ def step3_generate_image(image_prompt: str, provider: str = "openai") -> str:
         return result["images"][0]["url"]
 
     elif provider == "gemini":
-        api_key = os.getenv("GEMINI_API_KEY")
-        if not api_key:
+        gemini_api_key = os.getenv("GEMINI_API_KEY")
+        if not gemini_api_key:
             raise ValueError("GEMINI_API_KEY not configured")
 
         # Use the working model from test script
         model = "gemini-2.0-flash-exp-image-generation"
-        endpoint = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
+        endpoint = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={gemini_api_key}"
 
         # Add exclusions to prompt
-        enhanced_prompt = f"{image_prompt}. Do not include any text, words, or human faces."
+        enhanced_prompt = (
+            f"{image_prompt}. Do not include any text, words, or human faces."
+        )
 
         # Gemini generateContent format - must include responseModalities for image output
         payload = {
             "contents": [{"parts": [{"text": enhanced_prompt}]}],
-            "generationConfig": {
-                "responseModalities": ["TEXT", "IMAGE"]
-            },
+            "generationConfig": {"responseModalities": ["TEXT", "IMAGE"]},
         }
 
         response = httpx.post(endpoint, json=payload, timeout=120.0)
@@ -377,12 +432,27 @@ def step3_generate_image(image_prompt: str, provider: str = "openai") -> str:
         if "candidates" in result and len(result["candidates"]) > 0:
             content = result["candidates"][0].get("content", {})
             parts = content.get("parts", [])
-            
+
             for part in parts:
                 if "inlineData" in part:
-                    mime_type = part["inlineData"].get("mimeType", "image/png")
                     image_b64 = part["inlineData"]["data"]
-                    return f"data:{mime_type};base64,{image_b64}"
+
+                    # Upload to imgBB to get a proper URL instead of massive base64
+                    imgbb_key = os.getenv("IMGBB_API_KEY")
+                    if imgbb_key:
+                        try:
+                            return upload_to_imgbb(
+                                image_b64, imgbb_key, "spirit_animal"
+                            )
+                        except Exception as e:
+                            # Fall back to base64 data URI if imgBB fails
+                            print(f"imgBB upload failed, falling back to base64: {e}")
+                            mime_type = part["inlineData"].get("mimeType", "image/png")
+                            return f"data:{mime_type};base64,{image_b64}"
+                    else:
+                        # No imgBB key configured, return base64 data URI
+                        mime_type = part["inlineData"].get("mimeType", "image/png")
+                        return f"data:{mime_type};base64,{image_b64}"
 
         raise ValueError("No image generated by Gemini")
 
@@ -431,6 +501,7 @@ async def generate_spirit_animal(
 # V2 FUNCTIONS (Tambo conversational onboarding flow)
 # ============================================================================
 
+
 def _build_interpretation_context(
     personality_summary: str,
     pronouns: str | None = None,
@@ -440,31 +511,37 @@ def _build_interpretation_context(
 ) -> str:
     """
     Build enhanced context for interpretation by appending metadata hints.
-    
+
     The personality_summary from Tambo is already rich. This adds subtle
     guidance from structured choices to help the LLM make better matches.
     """
     context_parts = [personality_summary]
-    
+
     hints = []
-    
+
     if energy_mode and energy_mode in ENERGY_MODE_HINTS:
         hints.append(f"Energy style suggests: {ENERGY_MODE_HINTS[energy_mode]}")
-    
+
     if social_pattern and social_pattern in SOCIAL_PATTERN_HINTS:
-        hints.append(f"Social preference suggests: {SOCIAL_PATTERN_HINTS[social_pattern]}")
-    
+        hints.append(
+            f"Social preference suggests: {SOCIAL_PATTERN_HINTS[social_pattern]}"
+        )
+
     if element_affinity and element_affinity in ELEMENT_ARTISTIC_HINTS:
         elem = ELEMENT_ARTISTIC_HINTS[element_affinity]
-        hints.append(f"Element affinity ({element_affinity}): palette of {elem['palette']}, mood is {elem['mood']}")
-    
+        hints.append(
+            f"Element affinity ({element_affinity}): palette of {elem['palette']}, mood is {elem['mood']}"
+        )
+
     if pronouns and pronouns != "unspecified":
         hints.append(f"Pronouns: {pronouns}")
-    
+
     if hints:
-        context_parts.append("\n\n--- Additional Context (for interpretation guidance) ---")
+        context_parts.append(
+            "\n\n--- Additional Context (for interpretation guidance) ---"
+        )
         context_parts.extend(hints)
-    
+
     return "\n".join(context_parts)
 
 
@@ -476,16 +553,16 @@ def interpret_spirit_animal(
     element_affinity: str | None = None,
 ) -> dict:
     """
-    V2 Interpretation: Take a pre-assembled personality summary and return 
+    V2 Interpretation: Take a pre-assembled personality summary and return
     spirit animal interpretation using the rich system prompt.
-    
+
     Args:
         personality_summary: Rich text summary assembled by Tambo frontend
         pronouns: "he/him", "she/her", "they/them", or "unspecified"
         energy_mode: "leader", "adapter", or "observer"
         social_pattern: "solitude", "close_circle", or "crowd"
         element_affinity: "fire", "water", "earth", or "air"
-        
+
     Returns:
         Dict with spiritAnimal, artisticMedium, and imagePrompt
     """
@@ -497,19 +574,22 @@ def interpret_spirit_animal(
         social_pattern=social_pattern,
         element_affinity=element_affinity,
     )
-    
+
     response = openai_client.chat.completions.create(
         model="gpt-4o",
         response_format={"type": "json_object"},
         messages=[
             {"role": "system", "content": INTERPRETATION_SYSTEM_PROMPT},
-            {"role": "user", "content": f"Interpret this personality and recommend a spirit animal:\n\n{enhanced_context}"}
+            {
+                "role": "user",
+                "content": f"Interpret this personality and recommend a spirit animal:\n\n{enhanced_context}",
+            },
         ],
         temperature=0.7,
         max_tokens=1000,
         timeout=60.0,
     )
-    
+
     return json.loads(response.choices[0].message.content)
 
 
@@ -524,10 +604,10 @@ async def generate_spirit_animal_v2(
 ) -> dict:
     """
     V2 Pipeline: Generate spirit animal from pre-assembled Tambo summary.
-    
+
     This skips the old aggregation and personality summary steps - the Tambo
     conversational flow has already gathered rich personality data.
-    
+
     Args:
         personality_summary: Rich text summary assembled by Tambo frontend
         pronouns: "he/him", "she/her", "they/them", or "unspecified"
@@ -536,7 +616,7 @@ async def generate_spirit_animal_v2(
         element_affinity: "fire", "water", "earth", or "air" (from Q7)
         image_provider: "openai", "gemini", "ideogram", or "none"
         skip_image: If True, skip image generation (for testing)
-        
+
     Returns:
         Complete result dict with interpretation and image
     """
@@ -548,16 +628,16 @@ async def generate_spirit_animal_v2(
         social_pattern=social_pattern,
         element_affinity=element_affinity,
     )
-    
+
     # Step 2: Generate image (unless skipped)
     image_url = None
     actual_provider = image_provider
-    
+
     if not skip_image and image_provider != "none":
         image_url = step3_generate_image(interpretation["imagePrompt"], image_provider)
     else:
         actual_provider = "none"
-    
+
     # Build response matching frontend expectations
     return {
         "personality_summary": personality_summary,  # Echo back the input

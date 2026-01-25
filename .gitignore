@@ -16,3 +16,4 @@ venv/
 .claude/hooks/voice_notifications/debug.log
 .env
 .DS_Store
+.osgrep

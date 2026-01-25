@@ -1,27 +1,21 @@
-/**
- * @file SpiritAnimalChat.tsx
- * @description Conversational interface for Spirit Animal discovery
- * 
- * This replaces the traditional form with an AI-guided conversation
- * that feels more personal and engaging.
- */
-
 import { useTamboThread, useTamboThreadInput } from "@tambo-ai/react";
 import { Send, Sparkles } from "lucide-react";
 import { useEffect, useRef } from "react";
+import { DebugPanel } from "./DebugPanel";
 
 export function SpiritAnimalChat() {
   const { thread } = useTamboThread();
   const { value, setValue, submit, isPending } = useTamboThreadInput();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const lastMessageId = thread.messages[thread.messages.length - 1]?.id;
 
-  // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [thread.messages]);
+    if (lastMessageId) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [lastMessageId]);
 
-  // Focus input on mount
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
@@ -34,6 +28,7 @@ export function SpiritAnimalChat() {
   };
 
   return (
+    <>
     <div className="flex flex-col h-[600px] max-w-2xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-purple-100">
       {/* Header */}
       <div className="bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-4">
@@ -70,7 +65,7 @@ export function SpiritAnimalChat() {
               {Array.isArray(message.content) ? (
                 message.content.map((part, i) =>
                   part.type === "text" ? (
-                    <p key={i} className="whitespace-pre-wrap">{part.text}</p>
+                    <p key={`${message.id}-part-${i}`} className="whitespace-pre-wrap">{part.text}</p>
                   ) : null
                 )
               ) : (
@@ -128,5 +123,7 @@ export function SpiritAnimalChat() {
         </div>
       </form>
     </div>
+    <DebugPanel />
+    </>
   );
 }
