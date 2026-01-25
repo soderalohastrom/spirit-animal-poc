@@ -16,13 +16,13 @@ check() {
 
     if [ -e "$path" ]; then
         echo "  ✓ $name"
-        ((PASS++))
+        PASS=$((PASS + 1))
     elif [ "$required" = "true" ]; then
         echo "  ✗ $name (missing: $path)"
-        ((FAIL++))
+        FAIL=$((FAIL + 1))
     else
         echo "  ⚠ $name (optional, not found)"
-        ((WARN++))
+        WARN=$((WARN + 1))
     fi
 }
 
@@ -32,13 +32,13 @@ check_exec() {
 
     if [ -x "$path" ]; then
         echo "  ✓ $name (executable)"
-        ((PASS++))
+        PASS=$((PASS + 1))
     elif [ -f "$path" ]; then
         echo "  ⚠ $name (exists but not executable)"
-        ((WARN++))
+        WARN=$((WARN + 1))
     else
         echo "  ✗ $name (missing: $path)"
-        ((FAIL++))
+        FAIL=$((FAIL + 1))
     fi
 }
 
@@ -118,11 +118,11 @@ echo "Data Files:"
 if [ -f "$CLAUDE_DIR/dep-graph.toon" ]; then
     FILE_COUNT=$(grep -c "^FILE:" "$CLAUDE_DIR/dep-graph.toon" 2>/dev/null || echo "0")
     echo "  ✓ dep-graph.toon ($FILE_COUNT files indexed)"
-    ((PASS++))
+    PASS=$((PASS + 1))
 else
     echo "  ⚠ dep-graph.toon (not built yet)"
     echo "    Run: .claude/bin/dependency-scanner --path . --output .claude/dep-graph.toon"
-    ((WARN++))
+    WARN=$((WARN + 1))
 fi
 echo ""
 
@@ -131,10 +131,10 @@ echo "Functional Tests:"
 if [ -x "$CLAUDE_DIR/bin/dependency-scanner" ]; then
     if "$CLAUDE_DIR/bin/dependency-scanner" --version >/dev/null 2>&1; then
         echo "  ✓ dependency-scanner runs"
-        ((PASS++))
+        PASS=$((PASS + 1))
     else
         echo "  ✗ dependency-scanner fails to run"
-        ((FAIL++))
+        FAIL=$((FAIL + 1))
     fi
 else
     echo "  - dependency-scanner (skipped, not installed)"
@@ -143,10 +143,10 @@ fi
 if [ -x "$CLAUDE_DIR/bin/progressive-reader" ]; then
     if "$CLAUDE_DIR/bin/progressive-reader" --help >/dev/null 2>&1; then
         echo "  ✓ progressive-reader runs"
-        ((PASS++))
+        PASS=$((PASS + 1))
     else
         echo "  ✗ progressive-reader fails to run"
-        ((FAIL++))
+        FAIL=$((FAIL + 1))
     fi
 else
     echo "  - progressive-reader (skipped, not installed)"
