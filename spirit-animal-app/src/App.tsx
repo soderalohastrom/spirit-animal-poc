@@ -22,6 +22,7 @@ import { MessageSquare, ClipboardList } from "lucide-react";
 const initialMessages: TamboThreadMessage[] = [
   {
     id: "welcome-message",
+    threadId: "spirit-animal-thread",
     role: "assistant",
     content: [
       {
@@ -100,7 +101,7 @@ function App() {
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50">
       {/* Header */}
       <header className="py-8 px-4">
-        <div className="max-w-4xl mx-auto text-center">
+        <div className="max-w-5xl mx-auto text-center">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
             Spirit Animal
           </h1>
@@ -109,6 +110,7 @@ function App() {
           {/* Mode Toggle */}
           <div className="inline-flex bg-white rounded-lg p-1 shadow-sm border border-purple-100">
             <button
+              type="button"
               onClick={() => setMode("chat")}
               className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all ${
                 mode === "chat"
@@ -120,6 +122,7 @@ function App() {
               Chat
             </button>
             <button
+              type="button"
               onClick={() => setMode("form")}
               className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all ${
                 mode === "form"
@@ -153,7 +156,7 @@ function App() {
           /* Traditional Form Mode */
           <>
             {error && (
-              <div className="max-w-2xl mx-auto mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+              <div className="max-w-5xl mx-auto mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
                 {error}
               </div>
             )}

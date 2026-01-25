@@ -29,7 +29,7 @@ export function SpiritAnimalChat() {
 
   return (
     <>
-    <div className="flex flex-col h-[600px] max-w-2xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-purple-100">
+    <div className="flex flex-col h-[600px] max-w-5xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-purple-100">
       {/* Header */}
       <div className="bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-4">
         <div className="flex items-center gap-2 text-white">

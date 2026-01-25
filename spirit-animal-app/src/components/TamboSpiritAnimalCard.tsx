@@ -8,8 +8,9 @@
  * - AI-generated image (if available)
  */
 
-import { Share2, Download, Sparkles, Palette, Loader2 } from "lucide-react";
+import { Share2, Download, Sparkles, Palette, Loader2, X } from "lucide-react";
 import { useState } from "react";
+import * as Dialog from "@radix-ui/react-dialog";
 
 /**
  * Flat props interface for Tambo compatibility.
@@ -75,35 +76,67 @@ export function TamboSpiritAnimalCard(props: TamboSpiritAnimalCardProps) {
     <div className="bg-white rounded-xl overflow-hidden shadow-lg border border-purple-100 max-w-md">
       {/* Image Section */}
       {imageUrl && !imageError ? (
-        <div className="relative aspect-square bg-gray-100">
-          {imageLoading && (
-            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-100 to-pink-100">
-              <div className="text-center">
-                <Loader2 className="w-8 h-8 mx-auto mb-2 text-purple-500 animate-spin" />
-                <p className="text-sm text-purple-600">
-                  Revealing your spirit animal...
-                </p>
+        <Dialog.Root>
+          <Dialog.Trigger asChild>
+            <div className="relative aspect-square bg-gray-100 cursor-pointer group">
+              {imageLoading && (
+                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-100 to-pink-100">
+                  <div className="text-center">
+                    <Loader2 className="w-8 h-8 mx-auto mb-2 text-purple-500 animate-spin" />
+                    <p className="text-sm text-purple-600">
+                      Revealing your spirit animal...
+                    </p>
+                  </div>
+                </div>
+              )}
+              <img
+                src={imageUrl}
+                alt={animal}
+                className={`w-full h-full object-cover transition-all duration-500 ${
+                  imageLoading ? "opacity-0" : "opacity-100 group-hover:scale-105"
+                }`}
+                onLoad={() => setImageLoading(false)}
+                onError={() => {
+                  setImageError(true);
+                  setImageLoading(false);
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+              <div className="absolute bottom-4 left-4 right-4 text-white">
+                <p className="text-sm opacity-80">{userName}'s Spirit Animal</p>
+                <h3 className="text-2xl font-bold">{animal}</h3>
               </div>
+              
+              {!imageLoading && (
+                <div className="absolute top-4 right-4 bg-black/20 backdrop-blur-sm p-2 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                   <Sparkles className="w-4 h-4" />
+                </div>
+              )}
             </div>
-          )}
-          <img
-            src={imageUrl}
-            alt={animal}
-            className={`w-full h-full object-cover transition-opacity duration-500 ${
-              imageLoading ? "opacity-0" : "opacity-100"
-            }`}
-            onLoad={() => setImageLoading(false)}
-            onError={() => {
-              setImageError(true);
-              setImageLoading(false);
-            }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-          <div className="absolute bottom-4 left-4 right-4 text-white">
-            <p className="text-sm opacity-80">{userName}'s Spirit Animal</p>
-            <h3 className="text-2xl font-bold">{animal}</h3>
-          </div>
-        </div>
+          </Dialog.Trigger>
+          
+          <Dialog.Portal>
+            <Dialog.Overlay className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
+            <Dialog.Content className="fixed left-[50%] top-[50%] z-50 w-full max-w-[95vw] max-h-[95vh] translate-x-[-50%] translate-y-[-50%] focus:outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] duration-200">
+              <div className="relative w-full h-full flex items-center justify-center">
+                <img
+                  src={imageUrl}
+                  alt={animal}
+                  className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl border border-white/10"
+                />
+                <Dialog.Close asChild>
+                  <button 
+                    type="button"
+                    className="absolute top-[-40px] right-0 text-white/70 hover:text-white transition-colors p-2"
+                    aria-label="Close"
+                  >
+                    <X className="w-8 h-8" />
+                  </button>
+                </Dialog.Close>
+              </div>
+            </Dialog.Content>
+          </Dialog.Portal>
+        </Dialog.Root>
       ) : (
         <div className="aspect-video bg-gradient-to-br from-purple-500 via-purple-600 to-pink-500 flex items-center justify-center">
           <div className="text-center text-white p-6">
@@ -138,6 +171,7 @@ export function TamboSpiritAnimalCard(props: TamboSpiritAnimalCardProps) {
 
         {/* Expandable Details */}
         <button
+          type="button"
           onClick={() => setShowDetails(!showDetails)}
           className="text-sm text-purple-600 hover:text-purple-800 transition-colors"
         >
@@ -173,6 +207,7 @@ export function TamboSpiritAnimalCard(props: TamboSpiritAnimalCardProps) {
         {/* Actions */}
         <div className="flex gap-2 pt-2">
           <button
+            type="button"
             onClick={handleShare}
             className="flex-1 py-2.5 px-4 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors flex items-center justify-center gap-2"
           >
