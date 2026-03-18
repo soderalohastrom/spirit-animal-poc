@@ -60,13 +60,52 @@ frontend_url = os.getenv("FRONTEND_URL")
 if frontend_url:
     ALLOWED_ORIGINS.append(frontend_url)
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=ALLOWED_ORIGINS,
-    allow_credentials=True,
-    allow_methods=["GET", "POST", "OPTIONS"],
-    allow_headers=["Content-Type", "Authorization"],
-)
+# Regex pattern for Coolify dynamic sslip.io subdomains
+import re
+SSLIP_PATTERN = re.compile(r"^https?://[a-z0-9]+\.[\d.]+\.sslip\.io$")
+
+def is_allowed_origin(origin: str) -> bool:
+    """Check if origin is allowed (static list or sslip.io pattern)."""
+    if origin in ALLOWED_ORIGINS:
+        return True
+    if SSLIP_PATTERN.match(origin):
+        return True
+    return False
+
+# Custom CORS middleware to handle dynamic origins
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.requests import Request
+from starlette.responses import Response
+
+class DynamicCORSMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        origin = request.headers.get("origin", "")
+
+        # Handle preflight OPTIONS requests
+        if request.method == "OPTIONS":
+            if is_allowed_origin(origin):
+                return Response(
+                    status_code=200,
+                    headers={
+                        "Access-Control-Allow-Origin": origin,
+                        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+                        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+                        "Access-Control-Allow-Credentials": "true",
+                        "Access-Control-Max-Age": "600",
+                    }
+                )
+            return Response(status_code=403)
+
+        response = await call_next(request)
+
+        # Add CORS headers to response if origin is allowed
+        if origin and is_allowed_origin(origin):
+            response.headers["Access-Control-Allow-Origin"] = origin
+            response.headers["Access-Control-Allow-Credentials"] = "true"
+
+        return response
+
+app.add_middleware(DynamicCORSMiddleware)
 
 
 # Request/Response models
