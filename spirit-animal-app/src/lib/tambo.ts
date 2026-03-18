@@ -54,6 +54,7 @@ const spiritResultSchema = z.object({
   mediumReasoning: z.string().describe("Why this medium captures their essence"),
   imageUrl: z.string().nullable().describe("URL to the generated spirit animal image"),
   imagePrompt: z.string().describe("The prompt used for image generation"),
+  userName: z.string().describe("The user's name"),
 });
 
 // =============================================================================
@@ -165,7 +166,7 @@ The tool will assemble a rich personality summary and send it to the V2 backend 
         const backendResult = await response.json();
         console.log("[Tambo Tool V2] Backend response:", backendResult);
 
-        // Transform V2 response to match our schema
+        // Transform V2 response to match our schema + include userName
         const result = {
           animal: backendResult.spirit_animal,
           animalReasoning: backendResult.animal_reasoning,
@@ -173,6 +174,7 @@ The tool will assemble a rich personality summary and send it to the V2 backend 
           mediumReasoning: backendResult.medium_reasoning,
           imageUrl: backendResult.image_url,
           imagePrompt: backendResult.image_prompt,
+          userName: params.name, // Include for component rendering
         };
 
         console.log("[Tambo Tool V2] Transformed result:", result);
@@ -191,36 +193,28 @@ The tool will assemble a rich personality summary and send it to the V2 backend 
       mediumReasoning: string;
       imageUrl: string | null;
       imagePrompt: string;
+      userName: string;
     }) => {
       console.log("[Tambo Tool V2] transformToContent called with:", result);
       console.log("[Tambo Tool V2] imageUrl value:", result.imageUrl);
-      
-      // Include ALL data in the text so Tambo LLM can pass it to the component
-      const imageInfo = result.imageUrl 
-        ? `**Image URL:** ${result.imageUrl}\n` 
-        : "**Image:** Not generated\n";
-      
+
+      // Return structured JSON that Tambo can parse for component props
       return [
         {
           type: "text" as const,
-          text: `Spirit animal generated successfully!
+          text: `Spirit animal generated! Render the SpiritAnimalCard component with these props:
 
-**Animal:** ${result.animal}
-**Why:** ${result.animalReasoning}
-
-**Art Style:** ${result.artMedium}
-**Why this style:** ${result.mediumReasoning}
-
-${imageInfo}
-**Image Prompt:** ${result.imagePrompt}
-
-Now render the SpiritAnimalCard component with these exact values:
-- animal: "${result.animal}"
-- animalReasoning: "${result.animalReasoning}"
-- artMedium: "${result.artMedium}"
-- mediumReasoning: "${result.mediumReasoning}"
-- imageUrl: ${result.imageUrl ? `"${result.imageUrl}"` : "null"}
-- imagePrompt: "${result.imagePrompt}"`,
+\`\`\`json
+{
+  "animal": "${result.animal}",
+  "animalReasoning": "${result.animalReasoning.replace(/"/g, '\\"')}",
+  "artMedium": "${result.artMedium}",
+  "mediumReasoning": "${result.mediumReasoning.replace(/"/g, '\\"')}",
+  "imageUrl": ${result.imageUrl ? `"${result.imageUrl}"` : "null"},
+  "imagePrompt": "${result.imagePrompt.replace(/"/g, '\\"')}",
+  "userName": "${result.userName}"
+}
+\`\`\``,
         },
       ];
     },
@@ -264,13 +258,9 @@ Now render the SpiritAnimalCard component with these exact values:
 export const components: TamboComponent[] = [
   {
     name: "SpiritAnimalCard",
-    description: `Displays the complete spirit animal result including:
-- The spirit animal name and why it matches the user
-- The artistic medium chosen and why it captures their essence
-- The AI-generated image (if available)
-
-Use this component after calling generateSpiritAnimal to reveal the user's spirit animal.
-Pass all props flat (not nested under 'result').`,
+    description: `Displays the complete spirit animal result.
+IMPORTANT: This component is automatically rendered after generateSpiritAnimal tool completes.
+The tool output contains all the props needed - extract them from the JSON in the tool result.`,
     component: TamboSpiritAnimalCard,
     propsSchema: z.object({
       animal: z.string().describe("The spirit animal name (e.g., 'Arctic Fox')"),
@@ -281,6 +271,8 @@ Pass all props flat (not nested under 'result').`,
       imagePrompt: z.string().describe("The prompt used for image generation"),
       userName: z.string().describe("The user's name to personalize the card"),
     }),
+    // Link this component to the generateSpiritAnimal tool
+    associatedTools: tools,
   },
 ];
 
