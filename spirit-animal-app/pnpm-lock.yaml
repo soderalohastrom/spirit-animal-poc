@@ -13,7 +13,7 @@ importers:
         version: 3.10.0(react-hook-form@7.55.0(react@18.3.1))
       '@modelcontextprotocol/sdk':
         specifier: ^1.25.1
-        version: 1.25.1(hono@4.11.3)(zod@3.25.76)
+        version: 1.25.1(hono@4.11.3)(zod@4.3.6)
       '@radix-ui/react-accordion':
         specifier: ^1.2.2
         version: 1.2.4(@types/react-dom@18.3.6(@types/react@18.3.20))(@types/react@18.3.20)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -97,7 +97,7 @@ importers:
         version: 1.2.0(@types/react-dom@18.3.6(@types/react@18.3.20))(@types/react@18.3.20)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tambo-ai/react':
         specifier: ^0.68.0
-        version: 0.68.0(@modelcontextprotocol/sdk@1.25.1(hono@4.11.3)(zod@3.25.76))(@types/json-schema@7.0.15)(@types/node@22.14.1)(@types/react-dom@18.3.6(@types/react@18.3.20))(@types/react@18.3.20)(quansync@0.2.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)(zod-to-json-schema@3.25.1(zod@3.25.76))(zod@3.25.76)
+        version: 0.68.0(@modelcontextprotocol/sdk@1.25.1(hono@4.11.3)(zod@4.3.6))(@types/json-schema@7.0.15)(@types/node@22.14.1)(@types/react-dom@18.3.6(@types/react@18.3.20))(@types/react@18.3.20)(quansync@0.2.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)(zod-to-json-schema@3.25.1(zod@4.3.6))(zod@4.3.6)
       '@tambo-ai/typescript-sdk':
         specifier: ^0.80.0
         version: 0.80.0
@@ -159,11 +159,11 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@18.3.6(@types/react@18.3.20))(@types/react@18.3.20)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       zod:
-        specifier: ^3.25.76
-        version: 3.25.76
+        specifier: ^4.3.6
+        version: 4.3.6
       zod-to-json-schema:
         specifier: ^3.25.1
-        version: 3.25.1(zod@3.25.76)
+        version: 3.25.1(zod@4.3.6)
     devDependencies:
       '@eslint/js':
         specifier: ^9.15.0
@@ -3257,11 +3257,8 @@ packages:
     peerDependencies:
       zod: ^3.25 || ^4
 
-  zod@3.25.76:
-    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
-
-  zod@4.2.1:
-    resolution: {integrity: sha512-0wZ1IRqGGhMP76gLqz8EyfBXKk0J2qo2+H3fi4mcUP/KtTocoX08nmIAHl1Z2kJIZbZee8KOpBCSNPRgauucjw==}
+  zod@4.3.6:
+    resolution: {integrity: sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg==}
 
 snapshots:
 
@@ -3643,7 +3640,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@modelcontextprotocol/sdk@1.25.1(hono@4.11.3)(zod@3.25.76)':
+  '@modelcontextprotocol/sdk@1.25.1(hono@4.11.3)(zod@4.3.6)':
     dependencies:
       '@hono/node-server': 1.19.7(hono@4.11.3)
       ajv: 8.17.1
@@ -3659,8 +3656,8 @@ snapshots:
       json-schema-typed: 8.0.2
       pkce-challenge: 5.0.1
       raw-body: 3.0.2
-      zod: 3.25.76
-      zod-to-json-schema: 3.25.1(zod@3.25.76)
+      zod: 4.3.6
+      zod-to-json-schema: 3.25.1(zod@4.3.6)
     transitivePeerDependencies:
       - hono
       - supports-color
@@ -4550,20 +4547,20 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.39.0':
     optional: true
 
-  '@standard-community/standard-json@0.3.5(@standard-schema/spec@1.1.0)(@types/json-schema@7.0.15)(quansync@0.2.11)(zod-to-json-schema@3.25.1(zod@3.25.76))(zod@3.25.76)':
+  '@standard-community/standard-json@0.3.5(@standard-schema/spec@1.1.0)(@types/json-schema@7.0.15)(quansync@0.2.11)(zod-to-json-schema@3.25.1(zod@4.3.6))(zod@4.3.6)':
     dependencies:
       '@standard-schema/spec': 1.1.0
       '@types/json-schema': 7.0.15
       quansync: 0.2.11
     optionalDependencies:
-      zod: 3.25.76
-      zod-to-json-schema: 3.25.1(zod@3.25.76)
+      zod: 4.3.6
+      zod-to-json-schema: 3.25.1(zod@4.3.6)
 
   '@standard-schema/spec@1.1.0': {}
 
-  '@tambo-ai/react@0.68.0(@modelcontextprotocol/sdk@1.25.1(hono@4.11.3)(zod@3.25.76))(@types/json-schema@7.0.15)(@types/node@22.14.1)(@types/react-dom@18.3.6(@types/react@18.3.20))(@types/react@18.3.20)(quansync@0.2.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)(zod-to-json-schema@3.25.1(zod@3.25.76))(zod@3.25.76)':
+  '@tambo-ai/react@0.68.0(@modelcontextprotocol/sdk@1.25.1(hono@4.11.3)(zod@4.3.6))(@types/json-schema@7.0.15)(@types/node@22.14.1)(@types/react-dom@18.3.6(@types/react@18.3.20))(@types/react@18.3.20)(quansync@0.2.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)(zod-to-json-schema@3.25.1(zod@4.3.6))(zod@4.3.6)':
     dependencies:
-      '@standard-community/standard-json': 0.3.5(@standard-schema/spec@1.1.0)(@types/json-schema@7.0.15)(quansync@0.2.11)(zod-to-json-schema@3.25.1(zod@3.25.76))(zod@3.25.76)
+      '@standard-community/standard-json': 0.3.5(@standard-schema/spec@1.1.0)(@types/json-schema@7.0.15)(quansync@0.2.11)(zod-to-json-schema@3.25.1(zod@4.3.6))(zod@4.3.6)
       '@standard-schema/spec': 1.1.0
       '@tambo-ai/typescript-sdk': 0.80.0
       '@tanstack/react-query': 5.90.14(react@18.3.1)
@@ -4578,11 +4575,11 @@ snapshots:
       ts-essentials: 10.1.1(typescript@5.6.3)
       ts-node: 10.9.2(@types/node@22.14.1)(typescript@5.6.3)
       use-debounce: 10.0.6(react@18.3.1)
-      zodInternalAlias: zod@4.2.1
+      zodInternalAlias: zod@4.3.6
     optionalDependencies:
-      '@modelcontextprotocol/sdk': 1.25.1(hono@4.11.3)(zod@3.25.76)
-      zod: 3.25.76
-      zod-to-json-schema: 3.25.1(zod@3.25.76)
+      '@modelcontextprotocol/sdk': 1.25.1(hono@4.11.3)(zod@4.3.6)
+      zod: 4.3.6
+      zod-to-json-schema: 3.25.1(zod@4.3.6)
     transitivePeerDependencies:
       - '@swc/core'
       - '@swc/wasm'
@@ -6359,10 +6356,8 @@ snapshots:
 
   yocto-queue@0.1.0: {}
 
-  zod-to-json-schema@3.25.1(zod@3.25.76):
+  zod-to-json-schema@3.25.1(zod@4.3.6):
     dependencies:
-      zod: 3.25.76
+      zod: 4.3.6
 
-  zod@3.25.76: {}
-
-  zod@4.2.1: {}
+  zod@4.3.6: {}

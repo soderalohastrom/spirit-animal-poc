@@ -225,39 +225,35 @@ Now render the SpiritAnimalCard component with these exact values:
       ];
     },
 
-    toolSchema: z
-      .function()
-      .args(
-        z.object({
-          name: z.string().describe("User's name"),
-          pronouns: z
-            .enum(["he/him", "she/her", "they/them", "unspecified"])
-            .describe("User's pronouns"),
-          energyMode: z
-            .enum(["leader", "adapter", "observer"])
-            .describe("How they approach challenges: leader (take charge), adapter (find clever paths), observer (understand first)"),
-          socialPattern: z
-            .enum(["solitude", "close_circle", "crowd"])
-            .describe("How they recharge: solitude (alone), close_circle (few trusted people), crowd (social energy)"),
-          selfDescription: z
-            .string()
-            .describe("Their exact words describing themselves"),
-          joySource: z
-            .string()
-            .describe("What activities or moments bring genuine joy"),
-          aspirations: z
-            .string()
-            .describe("What matters most to them right now, what they're working toward"),
-          elementAffinity: z
-            .enum(["fire", "water", "earth", "air"])
-            .describe("Which element calls to them: fire (passion), water (depth), earth (stability), air (freedom)"),
-          imageProvider: z
-            .enum(["openai", "gemini", "ideogram", "none"])
-            .optional()
-            .describe("Image generation provider - defaults to 'openai'"),
-        })
-      )
-      .returns(spiritResultSchema),
+    inputSchema: z.object({
+      name: z.string().describe("User's name"),
+      pronouns: z
+        .enum(["he/him", "she/her", "they/them", "unspecified"])
+        .describe("User's pronouns"),
+      energyMode: z
+        .enum(["leader", "adapter", "observer"])
+        .describe("How they approach challenges: leader (take charge), adapter (find clever paths), observer (understand first)"),
+      socialPattern: z
+        .enum(["solitude", "close_circle", "crowd"])
+        .describe("How they recharge: solitude (alone), close_circle (few trusted people), crowd (social energy)"),
+      selfDescription: z
+        .string()
+        .describe("Their exact words describing themselves"),
+      joySource: z
+        .string()
+        .describe("What activities or moments bring genuine joy"),
+      aspirations: z
+        .string()
+        .describe("What matters most to them right now, what they're working toward"),
+      elementAffinity: z
+        .enum(["fire", "water", "earth", "air"])
+        .describe("Which element calls to them: fire (passion), water (depth), earth (stability), air (freedom)"),
+      imageProvider: z
+        .enum(["openai", "gemini", "ideogram", "none"])
+        .optional()
+        .describe("Image generation provider - defaults to 'openai'"),
+    }),
+    outputSchema: spiritResultSchema,
   },
 ];
 
